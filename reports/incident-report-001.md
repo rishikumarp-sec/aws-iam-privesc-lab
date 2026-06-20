@@ -139,13 +139,33 @@ attached policy, this allowed direct self escalation.
    patterns using tools such as PMapper or Cloudsplaining
 
 ## Containment Steps Taken
+    ## Containment Steps Taken
+
+Reverted policy to original safe version:
+
+    aws iam set-default-policy-version \
+      --policy-arn arn:aws:iam::063418083024:policy/lab-vulnerable-policy \
+      --version-id v1 --profile admin
+
+Deleted the malicious policy version:
+
     aws iam delete-policy-version \
       --policy-arn arn:aws:iam::063418083024:policy/lab-vulnerable-policy \
-      --version-id v2
+      --version-id v2 --profile admin
+
+Fully detached the vulnerable policy from the compromised user:
 
     aws iam detach-user-policy \
       --user-name lab-lowpriv-user \
-      --policy-arn arn:aws:iam::063418083024:policy/lab-vulnerable-policy
+      --policy-arn arn:aws:iam::063418083024:policy/lab-vulnerable-policy \
+      --profile admin
+
+**Verification:**
+
+    aws iam list-attached-user-policies --user-name lab-lowpriv-user
+
+Result: `{"AttachedPolicies": []}` — confirmed user has zero 
+attached policies, fully contained.
 
 ## Lessons Learned
 - A single overly permissive IAM action can lead to full account 
