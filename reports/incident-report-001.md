@@ -139,7 +139,6 @@ attached policy, this allowed direct self escalation.
    patterns using tools such as PMapper or Cloudsplaining
 
 ## Containment Steps Taken
-    ## Containment Steps Taken
 
 Reverted policy to original safe version:
 
